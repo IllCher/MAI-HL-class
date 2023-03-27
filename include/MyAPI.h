@@ -16,16 +16,20 @@ public:
     void postOnWall(const std::string& login, const std::string& message);
     std::vector<std::string> getWall(const std::string& login);
 
-    void MyAPI::sendMessage(const User& sender, const User& receiver, const std::string& message);
-    std::vector<ChatMessage> MyAPI::getMessages(const User& user);
+    void sendMessage(const User& sender, const User& receiver, const std::string& message);
+    std::vector<ChatMessage> getMessages(const User& user);
 
-private:
     std::vector<User> users;
     std::vector<Wall> walls;
     std::vector<ChatMessage> messages;
 
+private:
+
     User findOrCreateUser(const std::string& login, const std::string& name, const std::string& surname);
+    Wall findOrCreateWall(const User& user);
 };
 
 #endif // MYAPI_H
+
+
 

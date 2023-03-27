@@ -78,3 +78,43 @@ void Wall::addPost(const std::string& post) {
     m_posts.push_back(post);
 }
 
+Wall MyAPI::findOrCreateWall(const User& user) {
+    for (auto& wall : walls) {
+        if (wall.getUser().getUsername() == user.getUsername()) {
+            return wall;
+        }
+    }
+    Wall newWall(user);
+    walls.push_back(newWall);
+    return newWall;
+}
+
+void MyAPI::postOnWall(const std::string& login, const std::string& message) {
+    User user = findUserByLogin(login);
+    Wall wall = findOrCreateWall(user);
+    wall.addPost(message);
+}
+
+std::vector<std::string> MyAPI::getWall(const std::string& login) {
+    User user = findUserByLogin(login);
+    Wall wall = findOrCreateWall(user);
+    return wall.getPosts();
+}
+
+void MyAPI::sendMessage(const User& sender, const User& receiver, const std::string& message) {
+    ChatMessage newMessage(sender.getUsername(), receiver.getUsername(), message);
+    messages.push_back(newMessage);
+}
+
+std::vector<ChatMessage> MyAPI::getMessages(const User& user) {
+    std::vector<ChatMessage> userMessages;
+    std::string login = user.getUsername();
+    for (auto& message : messages) {
+        if (message.getSender() == login || message.getRecipient() == login) {
+            userMessages.push_back(message);
+        }
+    }
+    return userMessages;
+}
+
+

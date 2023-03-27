@@ -1,21 +1,22 @@
-cmake_minimum_required(VERSION 3.10)
-
+cmake_minimum_required(VERSION 3.16)
 project(my_http_server)
 
-# POCO dependencies
-find_package(POCO REQUIRED Foundation Net JSON Util)
-
-# Set compiler options
 set(CMAKE_CXX_STANDARD 17)
 
-# Add executable and sources
-add_executable(my_http_server main.cpp MyRequestHandlerFactory.cpp MyRequestHandler.cpp)
+find_package(Threads REQUIRED)
+find_package(Poco REQUIRED COMPONENTS Foundation Util Net Data MySQL)
 
-# Link against POCO libraries
-target_link_libraries(my_http_server ${POCO_LIBRARIES})
+add_executable(my_http_server
+        main.cpp
+        MyRequestHandler.cpp
+        MyRequestHandlerFactory.cpp
+        MyAPI.cpp)
 
-# Include POCO headers
 target_include_directories(my_http_server PRIVATE ${POCO_INCLUDE_DIRS})
+target_link_libraries(my_http_server PRIVATE ${POCO_LIBRARIES} Threads::Threads)
+
+configure_file(config.json config.json COPYONLY)
+
 
 
 

@@ -1,150 +1,138 @@
-#include "MyRequestHandler.h"
-#include <Poco/JSON/Parser.h>
-#include <Poco/JSON/Object.h>
-#include <Poco/Data/RecordSet.h>
-#include <Poco/Data/Statement.h>
-#include <Poco/Data/MySQL/MySQLException.h>
+#ifndef MYREQUESTHANDLER_H
+#define MYREQUESTHANDLER_H
 
-MyRequestHandler::MyRequestHandler(Poco::Data::Session& session)
-    : session_(session)
+#include "Poco/Net/HTTPRequestHandler.h"
+#include "Poco/Net/HTTPServerRequest.h"
+#include "Poco/Net/HTTPServerResponse.h"
+#include "Poco/Data/Session.h"
+#include "Poco/Data/MySQL/Connector.h"
+#include "MyAPI.h"
+using namespace Poco::Data::Keywords;
+
+
+using namespace Poco::Net;
+using namespace Poco::Data;
+
+class MyRequestHandler : public HTTPRequestHandler
 {
-}
+public:
+    MyRequestHandler(MyAPI &api) : m_api(api) {}
 
-void MyRequestHandler::handleRequest(Poco::Net::HTTPServerRequest& request, Poco::Net::HTTPServerResponse& response)
+    void handleRequest(HTTPServerRequest &request, HTTPServerResponse &response) override
+    {
+        response.setContentType("text/plain");
+
+        std::string method = request.getMethod();
+        if (method == "POST" && request.getURI() == "/users")
+        {
+            handleCreateUser(request, response);
+        }
+        else if (method == "GET" && request.getURI().find("/users") == 0)
+        {
+            handleFindUsers(request, response);
+        }
+        else if (method == "POST" && request.getURI().find("/walls/") == 0)
+        {
+            handlePostOnWall(request, response);
+        }
+        else if (method == "GET" && request.getURI().find("/walls/") == 0)
+        {
+            handleGetWall(request, response);
+        }
+        else if (method == "POST" && request.getURI().find("/messages/") == 0)
+        {
+            handleSendMessage(request, response);
+        }
+        else if (method == "GET" && request.getURI().find("/messages/") == 0)
+        {
+            handleGetMessages(request, response);
+        }
+        else
+        {
+            response.setStatus(HTTPResponse::HTTP_NOT_FOUND);
+            response.send();
+        }
+    }
+private:
+    MyAPI &m_api;
+    MySQL::Connector m_connector;
+
+    void handleCreateUser(HTTPServerRequest &request, HTTPServerResponse &response)
+    {
+        Session session(MySQL::Connector::KEY, "host=localhost;user=root;password=;db=mydatabase");
+        session << "INSERT INTO users(login, name, surname) VALUES(?, ?, ?)",
+            use(request.get("login")), use(request.get("name")), use(request.get("surname"));
+        response.setStatus(HTTPResponse::HTTP_CREATED);
+        response.send();
+    }
+
+    void handleFindUsers(HTTPServerRequest &request, HTTPServerResponse &response)
+    {
+        Session session(MySQL::Connector::KEY, "host=localhost;user=root;password=;db=mydatabase");
+        std::string name = request.get("name");
+        std::string surname = request.get("surname");
+        Statement select(session);
+        select << "SELECT login, name, surname FROM users WHERE name = ? AND surname = ?", into(m_api.users), use(name), use(surname), now;
+        std::stringstream output;
+        for (const auto &user : m_api.users)
+        {
+            output << user.getUsername() << "," << user.getFirstName() << "," << user.getLastName() << std::endl;
+        }
+        response.sendBuffer(output.str().data(), output.str().size());
+    }
+
+    void handlePostOnWall(HTTPServerRequest &request, HTTPServerResponse &response)
+    {
+        Session session(MySQL::Connector::KEY, "host=localhost;user=root;password=;db=mydatabase");
+        std::string login = request.getURI().substr(std::string("/walls/").size());
+        std::string message = request.get("message");
+        session << "INSERT INTO wall(login, message) VALUES(?, ?)",
+            use(login), use(message);
+        response.setStatus(HTTPResponse::HTTP_CREATED);
+
+        response.send();
+    }
+
+void handleGetWall(HTTPServerRequest &request, HTTPServerResponse &response)
 {
-    std::string path = request.getURI();
+    Session session(MySQL::Connector::KEY, "host=localhost;user=root;password=;db=mydatabase");
+    std::string login = request.getURI().substr(std::string("/walls/").size());
+    std::vector<std::string> wallPosts = m_api.getWall(login);
+    std::stringstream output;
+    for (const auto &message : wallPosts)
+    {
+        output << message << std::endl;
+    }
+    response.sendBuffer(output.str().data(), output.str().size());
+}
 
-    if (path == "/create_user") {
-        std::string requestBody = getRequestBody(request);
-        Poco::JSON::Parser parser;
-        Poco::Dynamic::Var result = parser.parse(requestBody);
-        Poco::JSON::Object::Ptr obj = result.extract<Poco::JSON::Object::Ptr>();
-        std::string login = obj->getValue<std::string>("login");
-        std::string name = obj->getValue<std::string>("name");
-        std::string surname = obj->getValue<std::string>("surname");
 
-        try {
-            Poco::Data::Statement insert(session_);
-            insert << "INSERT INTO users(login, name, surname) VALUES(?, ?, ?)", Poco::Data::Keywords::use(login), Poco::Data::Keywords::use(name), Poco::Data::Keywords::use(surname);
-            insert.execute();
-            User newUser = api_.createUser(login, name, surname);
-            std::string message = "User " + newUser.getUsername() + " created successfully";
-            sendResponse(response, message);
-        } catch (const Poco::Data::MySQL::MySQLException& e) {
-            sendResponse(response, "Error: " + std::string(e.what()));
+    void handleSendMessage(HTTPServerRequest &request, HTTPServerResponse &response)
+    {
+        Session session(MySQL::Connector::KEY, "host=localhost;user=root;password=;db=mydatabase");
+        std::string receiver = request.getURI().substr(std::string("/messages/").size());
+        std::string sender = request.get("sender");
+        std::string message = request.get("message");
+        session << "INSERT INTO messages(sender, receiver, message) VALUES(?, ?, ?)",
+            use(sender), use(receiver), use(message);
+        response.setStatus(HTTPResponse::HTTP_CREATED);
+        response.send();
+    }
+
+    void handleGetMessages(HTTPServerRequest &request, HTTPServerResponse &response)
+    {
+        Session session(MySQL::Connector::KEY, "host=localhost;user=root;password=;db=mydatabase");
+        std::string receiver = request.getURI().substr(std::string("/messages/").size());
+        Statement select(session);
+        select << "SELECT sender, message FROM messages WHERE receiver = ?",
+            into(m_api.messages), use(receiver), now;
+        std::stringstream output;
+        for (const auto &message : m_api.messages)
+        {
+            output << message.getSender() << ":" << message.getMessage() << std::endl;
         }
-    } else if (path == "/find_user_by_login") {
-        std::string login = request.get("login", "");
-
-        if (login.empty()) {
-            sendResponse(response, "Error: missing parameter 'login'");
-            return;
-        }
-
-        User user = api_.findUserByLogin(login);
-
-        if (user.getUsername().empty()) {
-            sendResponse(response, "Error: user not found");
-            return;
-        }
-
-        Poco::JSON::Object::Ptr obj = new Poco::JSON::Object();
-        obj->set("login", user.getUsername());
-        obj->set("name", user.getFirstName());
-        obj->set("surname", user.getLastName());
-        std::stringstream ss;
-        obj->stringify(ss);
-        sendResponse(response, ss.str());
-    } else if (path == "/find_users_by_name") {
-        std::string name = request.get("name", "");
-        std::string surname = request.get("surname", "");
-            if (name.empty() && surname.empty()) {
-        sendResponse(response, "Error: missing parameters 'name' or 'surname'");
-        return;
+        response.sendBuffer(output.str().data(), output.str().size());
     }
+};
 
-    std::vector<User> users = api_.findUsersByName(name, surname);
-
-    if (users.empty()) {
-        sendResponse(response, "Error: users not found");
-        return;
-    }
-
-    Poco::JSON::Array::Ptr arr = new Poco::JSON::Array();
-
-    for (const auto& user : users) {
-        Poco::JSON::Object::Ptr obj = new Poco::JSON::Object();
-        obj->set("login", user.getUsername());
-        obj->set("name", user.getFirstName());
-        obj->set("surname", user.getLastName());
-        arr->add(obj);
-    }
-
-    std::stringstream ss;
-    arr->stringify(ss);
-    sendResponse(response, ss.str());
-} else if (path == "/create_message") {
-    std::string requestBody = getRequestBody(request);
-    Poco::JSON::Parser parser;
-    Poco::Dynamic::Var result = parser.parse(requestBody);
-    Poco::JSON::Object::Ptr obj = result.extract<Poco::JSON::Object::Ptr>();
-    std::string senderLogin = obj->getValue<std::string>("sender");
-    std::string recipientLogin = obj->getValue<std::string>("recipient");
-    std::string content = obj->getValue<std::string>("content");
-
-    try {
-        Poco::Data::Statement insert(session_);
-        insert << "INSERT INTO messages(sender_login, recipient_login, content) VALUES(?, ?, ?)", Poco::Data::Keywords::use(senderLogin), Poco::Data::Keywords::use(recipientLogin), Poco::Data::Keywords::use(content);
-        insert.execute();
-        std::string message = "Message created successfully";
-        sendResponse(response, message);
-    } catch (const Poco::Data::MySQL::MySQLException& e) {
-        sendResponse(response, "Error: " + std::string(e.what()));
-    }
-} else if (path == "/find_messages_by_recipient") {
-    std::string recipientLogin = request.get("recipient", "");
-
-    if (recipientLogin.empty()) {
-        sendResponse(response, "Error: missing parameter 'recipient'");
-        return;
-    }
-
-    std::vector<Message> messages = api_.findMessagesByRecipient(recipientLogin);
-
-    if (messages.empty()) {
-        sendResponse(response, "Error: messages not found");
-        return;
-    }
-
-    Poco::JSON::Array::Ptr arr = new Poco::JSON::Array();
-
-    for (const auto& message : messages) {
-        Poco::JSON::Object::Ptr obj = new Poco::JSON::Object();
-        obj->set("sender", message.getSender());
-        obj->set("recipient", message.getRecipient());
-        obj->set("content", message.getContent());
-        arr->add(obj);
-    }
-
-    std::stringstream ss;
-    arr->stringify(ss);
-    sendResponse(response, ss.str());
-} else {
-    sendResponse(response, "Error: unknown path " + path);
-}
-}
-
-std::string MyRequestHandler::getRequestBody(Poco::Net::HTTPServerRequest& request)
-{
-std::istream& is = request.stream();
-std::string requestBody;
-std::string line;
-
-while (std::getline(is, line)) {
-    requestBody.append(line);
-}
-
-return requestBody;
-}
-
-
+#endif // MYREQUESTHANDLER_H

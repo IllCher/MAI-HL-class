@@ -1,21 +1,22 @@
-#ifndef MYREQUESTHANDLER_H
-#define MYREQUESTHANDLER_H
+#ifndef MYREQUESTHANDLERFACTORY_H
+#define MYREQUESTHANDLERFACTORY_H
 
-#include <Poco/Net/HTTPRequestHandler.h>
-#include <Poco/Net/HTTPServerRequest.h>
-#include <Poco/Net/HTTPServerResponse.h>
-#include <Poco/URI.h>
-#include <string>
-#include "MyAPI.h"
+#include <Poco/Net/HTTPRequestHandlerFactory.h>
+#include <Poco/Data/Session.h>
 
-class MyRequestHandler : public Poco::Net::HTTPRequestHandler {
+class MyRequestHandlerFactory : public Poco::Net::HTTPRequestHandlerFactory {
 public:
-    MyRequestHandler(MyAPI& api);
-    void handleRequest(Poco::Net::HTTPServerRequest& request, Poco::Net::HTTPServerResponse& response);
+    MyRequestHandlerFactory(Poco::Data::Session& session);
+
+    Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request) override;
 
 private:
-    MyAPI& m_api;
+    Poco::Data::Session& session_;
 };
 
-#endif
+#endif // MYREQUESTHANDLERFACTORY_H
+
+
+
+
 
