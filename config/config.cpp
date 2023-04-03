@@ -5,8 +5,8 @@ Config::Config()
         _host = "localhost";
         _port = "3306";
 
-        _login = "root";
-        _password = "hardcore19";
+        _login = "stud";
+        _password = "helloworld";
         _database = "stud";
 }
 

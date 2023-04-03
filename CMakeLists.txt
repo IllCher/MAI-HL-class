@@ -26,7 +26,7 @@ SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(${EXAMPLE_BINARY} main.cpp 
                                  config/config.cpp 
                                  database/database.cpp
-                                 database/user.cpp database/chat.cpp web_server/handlers/wall_handler.h web_server/handlers/chat_handler.h database/wall.h database/wall.cpp)
+                                 database/user.cpp database/chat.cpp database/wall.h database/wall.cpp chat_server/handlers/chat_handler.h chat_server/http_request_factory.h chat_server/http_web_server.h)
 
 
 target_include_directories(${EXAMPLE_BINARY} PRIVATE "${CMAKE_BINARY_DIR}")
@@ -43,21 +43,6 @@ target_link_libraries(${EXAMPLE_BINARY} PRIVATE
                              ZLIB::ZLIB)
 
 
-
-
-add_executable(${OTHER_SERVICE} other_main.cpp)
-target_include_directories(${OTHER_SERVICE} PRIVATE "${CMAKE_BINARY_DIR}")
-target_compile_options(${OTHER_SERVICE} PRIVATE -Wall -Wextra -pedantic -Werror )
-set_target_properties(${OTHER_SERVICE} PROPERTIES LINKER_LANGUAGE CXX)
-set_target_properties(${OTHER_SERVICE} PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
-
-target_link_libraries(${OTHER_SERVICE} PRIVATE 
-                             ${CMAKE_THREAD_LIBS_INIT} 
-                             ${Poco_LIBRARIES}
-                             "PocoData"
-                             "PocoDataMySQL"
-                             "mysqlclient"
-                             ZLIB::ZLIB)
 
 
 
