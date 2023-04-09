@@ -8,9 +8,9 @@ services:
     container_name: mai-db-node-ex01
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: archdb
+      MYSQL_DATABASE: stud
       MYSQL_USER: stud
-      MYSQL_PASSWORD: stud
+      MYSQL_PASSWORD: helloworld
       MYSQL_ROOT_PASSWORD: '1'
     command: >
       --sql-mode='STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'
@@ -27,16 +27,16 @@ services:
     volumes:
       - db-node-ex01-data:/var/lib/mysql
 
-  my_service:
+  UserService:
     build:
-      context: my_service
-      dockerfile: DockerfileUser
-    container_name: my_service
+      context: user_service
+      dockerfile: DockerUser
+    container_name: userservice
     environment:
       - DB_HOST=mai-db-node-ex01
       - DB_PORT=3306
       - DB_LOGIN=stud
-      - DB_PASSWORD=stud
+      - DB_PASSWORD=helloworld
       - DB_DATABASE=archdb
     ports:
       - 8080:8080
@@ -45,10 +45,12 @@ services:
     depends_on:
       mai-db-node-ex01:
         condition: service_healthy
+
+
   other_server:
     build:
       context: other_server
-      dockerfile: DockerfileUser
+      dockerfile: DockerUser
     container_name: other_server
     environment:
       - SERVICE_HOST=my_service

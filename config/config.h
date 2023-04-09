@@ -2,7 +2,7 @@
 #define CONFIG_H
 
 #include <string>
-
+#include <cstdlib>
 class  Config{
     private:
         Config();
