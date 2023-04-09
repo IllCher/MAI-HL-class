@@ -1,5 +1,5 @@
-#ifndef AUTHOR_H
-#define AUTHOR_H
+#ifndef WALL_H
+#define WALL_H
 
 #include <string>
 #include <vector>
@@ -40,9 +40,8 @@ namespace database
 
         static void init();
         static std::optional<Wall> read_by_id(long id);
-        static std::vector<Wall> read_all();
         void save_to_mysql();
-
+        void edit_post();
         void add_comments(std::string comment);
         static std::optional<Wall> get_comments(long id);
 

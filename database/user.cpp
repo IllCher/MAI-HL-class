@@ -230,6 +230,47 @@ namespace database
         }
     }
 
+    std::vector<User> User::searchbylogin(std::string login)
+    {
+        try
+        {
+            Poco::Data::Session session = database::Database::get().create_session();
+            Statement select(session);
+            std::vector<User> result;
+            User a;
+            login += "%";
+            select << "SELECT id, first_name, last_name, email, birth_date, login, password FROM User where login LIKE ?",
+                    into(a._id),
+                    into(a._first_name),
+                    into(a._last_name),
+                    into(a._email),
+                    into(a._birth_date),
+                    into(a._login),
+                    into(a._password),
+                    use(login),
+                    range(0, 1); //  iterate over result set one row at a time
+
+            while (!select.done())
+            {
+                if (select.execute())
+                    result.push_back(a);
+            }
+            return result;
+        }
+
+        catch (Poco::Data::MySQL::ConnectionException &e)
+        {
+            std::cout << "connection:" << e.what() << std::endl;
+            throw;
+        }
+        catch (Poco::Data::MySQL::StatementException &e)
+        {
+
+            std::cout << "statement:" << e.what() << std::endl;
+            throw;
+        }
+    }
+
     void User::save_to_mysql()
     {
 

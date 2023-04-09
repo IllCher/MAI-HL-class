@@ -122,8 +122,7 @@ public:
         return src;
     }
 
-    void handleRequest(HTTPServerRequest &request,
-                       HTTPServerResponse &response)
+    void handleRequest(HTTPServerRequest &request, HTTPServerResponse &response)
     {
         HTMLForm form(request, request.stream());
         try
@@ -194,12 +193,28 @@ public:
                 Poco::JSON::Stringifier::stringify(root, ostr);
                 return;
             }
-            else if (hasSubstr(request.getURI(), "/search"))
+            else if (hasSubstr(request.getURI(), "/searchbynames"))
             {
 
                 std::string fn = form.get("first_name");
                 std::string ln = form.get("last_name");
                 auto results = database::User::search(fn, ln);
+                Poco::JSON::Array arr;
+                for (auto s : results)
+                    arr.add(remove_password(s.toJSON()));
+                response.setStatus(Poco::Net::HTTPResponse::HTTP_OK);
+                response.setChunkedTransferEncoding(true);
+                response.setContentType("application/json");
+                std::ostream &ostr = response.send();
+                Poco::JSON::Stringifier::stringify(arr, ostr);
+
+                return;
+            }
+            else if (hasSubstr(request.getURI(), "/searchbylogin"))
+            {
+
+                std::string login = form.get("login");
+                auto results = database::User::searchbylogin(login);
                 Poco::JSON::Array arr;
                 for (auto s : results)
                     arr.add(remove_password(s.toJSON()));

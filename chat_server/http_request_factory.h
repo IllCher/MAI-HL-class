@@ -55,7 +55,7 @@ public:
 
         std::cout << "request:" << request.getURI()<< std::endl;
         if (hasSubstr(request.getURI(),"/send") ||
-            hasSubstr(request.getURI(),"/messages"))
+            hasSubstr(request.getURI(),"/chat"))
             return new ChatHandler(_format);
         return 0;
     }

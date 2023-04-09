@@ -11,8 +11,8 @@ namespace database
     class Chat{
     private:
         long _id;
-        long _receiver;
-        long _sender;
+        long _receiver_id;
+        long _sender_id;
         std::string _message;
 
     public:
@@ -20,9 +20,6 @@ namespace database
         static Chat fromJSON(const std::string & str);
 
         long get_id() const;
-        // const;
-        //const long &get_sender() const;
-        // const std::string &get_message() const;
 
         long& id();
         long &receiver_id();
@@ -32,7 +29,7 @@ namespace database
         static void init();
         static std::optional<Chat> read_by_id(long id);
         static std::vector<Chat> read_all();
-        static std::optional<Chat> read_by_receiver(long receiver);
+        static std::vector<Chat> read_by_sender(long receiver);
         void save_to_mysql();
 
         Poco::JSON::Object::Ptr toJSON() const;

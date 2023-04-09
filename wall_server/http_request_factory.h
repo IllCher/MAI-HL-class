@@ -38,7 +38,7 @@ using Poco::Util::OptionSet;
 using Poco::Util::OptionCallback;
 using Poco::Util::HelpFormatter;
 
-#include "handlers/user_handler.h"
+#include "handlers/wall_handler.h"
 
 
 class HTTPRequestFactory: public HTTPRequestHandlerFactory
@@ -54,10 +54,13 @@ public:
     {
 
         std::cout << "request:" << request.getURI()<< std::endl;
-        if (hasSubstr(request.getURI(),"/user") ||
-            hasSubstr(request.getURI(),"/search") ||
-            hasSubstr(request.getURI(),"/auth")) 
-            return new UserHandler(_format);
+        if (hasSubstr(request.getURI(),"/dopost") ||
+            hasSubstr(request.getURI(),"/getpost") ||
+            hasSubstr(request.getURI(),"/changepost") ||
+            hasSubstr(request.getURI(),"/checkcomments") ||
+            hasSubstr(request.getURI(),"/addcomment")
+            )
+            return new WallHandler(_format);
         return 0;
     }
 

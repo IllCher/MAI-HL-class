@@ -1,38 +1,52 @@
 CREATE DATABASE stud;
 use stud;
 show tables;
-CREATE TABLE IF NOT EXISTS `User` (`id` INT NOT NULL AUTO_INCREMENT,
-`first_name` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-`last_name` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-`email` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
-`birth_date` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
-`login` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
-`password` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
-PRIMARY KEY (`id`),KEY `fn` (`first_name`),KEY `ln` (`last_name`));
 
-describe User;
+create table Chat
+(
+    id          int auto_increment
+        primary key,
+    receiver_id int(100)                              null,
+    sender_id   int(100)                              null,
+    message     varchar(1000) collate utf8_unicode_ci null
+);
 
-INSERT INTO User (first_name, last_name, email, birth_date, login, password) VALUES ('John', 'Doe', 'Joe@gmail.com', '01.03.2023', 'CoolBoy', 'hehehehe');
+create index ri
+    on Chat (receiver_id);
 
-CREATE TABLE IF NOT EXISTS `Chat` (`id` INT NOT NULL AUTO_INCREMENT,
-`receiver_id` INT(100) ,
-`sender_id` INT(100),
-`message` VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
-PRIMARY KEY (`id`),KEY `ri` (`receiver_id`),KEY `si` (`sender_id`));
+create index si
+    on Chat (sender_id);
 
-describe Chat;
+create table User
+(
+    id         int auto_increment
+        primary key,
+    first_name varchar(256) collate utf8_unicode_ci not null,
+    last_name  varchar(256) collate utf8_unicode_ci not null,
+    email      varchar(256) collate utf8_unicode_ci null,
+    birth_date varchar(10) collate utf8_unicode_ci  null,
+    login      varchar(10) collate utf8_unicode_ci  null,
+    password   varchar(10) collate utf8_unicode_ci  null
+);
 
-INSERT INTO Chat (receiver_id, sender_id, message) VALUES ('1', '1', 'ggggggggggg');
+create index fn
+    on User (first_name);
 
-CREATE TABLE IF NOT EXISTS `Wall` (`id` INT NOT NULL AUTO_INCREMENT,
-`name` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-`login` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-`description` VARCHAR(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
-`data` VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
-`creation_date` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
-`comments` VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
-PRIMARY KEY (`id`));
+create index ln
+    on User (last_name);
 
-describe Wall;
+create table Wall
+(
+    id            int auto_increment
+        primary key,
+    name          varchar(256) collate utf8_unicode_ci  not null,
+    login         varchar(256) collate utf8_unicode_ci  not null,
+    description   varchar(256) collate utf8_unicode_ci  null,
+    data          varchar(1000) collate utf8_unicode_ci null,
+    creation_date varchar(10) collate utf8_unicode_ci   null,
+    comments      longtext collate utf8_unicode_ci      null
+);
 
-INSERT INTO Wall (name, login, description, data, creation_date, comments) VALUES ('Jo32hn', 'CoolBoy', 'Jfddssd', 'uyuytutyutyuty', '11.05.2023', 'ppppppyytr');
+
+
+

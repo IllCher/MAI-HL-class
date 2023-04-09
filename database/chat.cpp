@@ -52,8 +52,8 @@ namespace database
         Poco::JSON::Object::Ptr root = new Poco::JSON::Object();
 
         root->set("id", _id);
-        root->set("receiver_id", _receiver);
-        root->set("sender_id", _sender);
+        root->set("receiver_id", _receiver_id);
+        root->set("sender_id", _sender_id);
         root->set("message", _message);
 
         return root;
@@ -81,10 +81,10 @@ namespace database
             Poco::Data::Session session = database::Database::get().create_session();
             Poco::Data::Statement select(session);
             Chat a;
-            select << "SELECT id, receiver, sender, message FROM Chat where id=?",
+            select << "SELECT id, receiver_id, sender_id, message  FROM Chat where id=?",
                     into(a._id),
-                    into(a._receiver),
-                    into(a._sender),
+                    into(a._receiver_id),
+                    into(a._sender_id),
                     into(a._message),
                     use(id),
                     range(0, 1); //  iterate over result set one row at a time
@@ -107,24 +107,28 @@ namespace database
         return {};
     }
 
-    std::optional<Chat> Chat::read_by_receiver(long receiver)
+    std::vector<Chat> Chat::read_by_sender(long sender)
     {
         try
         {
             Poco::Data::Session session = database::Database::get().create_session();
             Poco::Data::Statement select(session);
+            std::vector<Chat> result;
             Chat a;
-            select << "SELECT id, receiver, sender, message FROM Chat where id=?",
+            select << "SELECT id, receiver_id, sender_id, message FROM Chat where sender_id=?",
                     into(a._id),
-                    into(a._receiver),
-                    into(a._sender),
+                    into(a._receiver_id),
+                    into(a._sender_id),
                     into(a._message),
-                    use(receiver),
+                    use(sender),
                     range(0, 1); //  iterate over result set one row at a time
 
-            select.execute();
-            Poco::Data::RecordSet rs(select);
-            if (rs.moveFirst()) return a;
+            while (!select.done())
+            {
+                if (select.execute())
+                    result.push_back(a);
+            }
+            return result;
         }
 
         catch (Poco::Data::MySQL::ConnectionException &e)
@@ -148,10 +152,10 @@ namespace database
             Statement select(session);
             std::vector<Chat> result;
             Chat a;
-            select << "SELECT id, receiver, sender, message FROM Chat",
+            select << "SELECT id, receiver_id, sender_id, message FROM Chat",
                     into(a._id),
-                    into(a._receiver),
-                    into(a._sender),
+                    into(a._receiver_id),
+                    into(a._sender_id),
                     into(a._message),
                     range(0, 1); //  iterate over result set one row at a time
 
@@ -185,8 +189,8 @@ namespace database
             Poco::Data::Statement insert(session);
 
             insert << "INSERT INTO Chat (receiver_id,sender_id,message) VALUES(?, ?, ?)",
-                    use(_receiver),
-                    use(_sender),
+                    use(_receiver_id),
+                    use(_sender_id),
                     use(_message);
 
             insert.execute();
@@ -228,12 +232,12 @@ namespace database
 
     long &Chat::receiver_id()
     {
-        return _receiver;
+        return _receiver_id;
     }
 
     long &Chat::sender_id()
     {
-        return _sender;
+        return _sender_id;
     }
 
     std::string &Chat::message(){

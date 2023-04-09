@@ -67,20 +67,20 @@ namespace database
 
     Wall Wall::fromJSON(const std::string &str)
     {
-        Wall chat;
+        Wall wall;
         Poco::JSON::Parser parser;
         Poco::Dynamic::Var result = parser.parse(str);
         Poco::JSON::Object::Ptr object = result.extract<Poco::JSON::Object::Ptr>();
 
-        chat.id() = object->getValue<long>("id");
-        chat.name() = object->getValue<std::string>("name");
-        chat.login() = object->getValue<std::string>("login");
-        chat.description() = object->getValue<std::string>("description");
-        chat.data() = object->getValue<std::string>("data");
-        chat.creation_date() = object->getValue<std::string>("creation_date");
-        chat.comments() = object->getValue<std::string>("commnets");
+        wall.id() = object->getValue<long>("id");
+        wall.name() = object->getValue<std::string>("name");
+        wall.login() = object->getValue<std::string>("login");
+        wall.description() = object->getValue<std::string>("description");
+        wall.data() = object->getValue<std::string>("data");
+        wall.creation_date() = object->getValue<std::string>("creation_date");
+        wall.comments() = object->getValue<std::string>("comments");
 
-        return chat;
+        return wall;
     }
 
     std::optional<Wall> Wall::read_by_id(long id)
@@ -90,7 +90,7 @@ namespace database
             Poco::Data::Session session = database::Database::get().create_session();
             Poco::Data::Statement select(session);
             Wall a;
-            select << "SELECT id, name FROM Wall where id=?",
+            select << "SELECT id, name, login, description, data, creation_date, comments FROM Wall where id=?",
                     into(a._id),
                     into(a._name),
                     into(a._login),
@@ -128,11 +128,6 @@ namespace database
             Wall a;
             select << "SELECT id, comments FROM Wall where id=?",
                     into(a._id),
-                    into(a._name),
-                    into(a._login),
-                    into(a._description),
-                    into(a._data),
-                    into(a._creation_date),
                     into(a._comments),
                     use(id),
                     range(0, 1); //  iterate over result set one row at a time
@@ -153,45 +148,6 @@ namespace database
 
         }
         return {};
-    }
-
-    std::vector<Wall> Wall::read_all()
-    {
-        try
-        {
-            Poco::Data::Session session = database::Database::get().create_session();
-            Statement select(session);
-            std::vector<Wall> result;
-            Wall a;
-            select << "SELECT id, name, login, description, data, creation_date, comments FROM Wall",
-                    into(a._id),
-                    into(a._name),
-                    into(a._login),
-                    into(a._description),
-                    into(a._data),
-                    into(a._creation_date),
-                    into(a._comments),
-                    range(0, 1); //  iterate over result set one row at a time
-
-            while (!select.done())
-            {
-                if (select.execute())
-                    result.push_back(a);
-            }
-            return result;
-        }
-
-        catch (Poco::Data::MySQL::ConnectionException &e)
-        {
-            std::cout << "connection:" << e.what() << std::endl;
-            throw;
-        }
-        catch (Poco::Data::MySQL::StatementException &e)
-        {
-
-            std::cout << "statement:" << e.what() << std::endl;
-            throw;
-        }
     }
 
     void Wall::save_to_mysql()
@@ -222,6 +178,7 @@ namespace database
                 select.execute();
             }
             std::cout << "inserted:" << _id << std::endl;
+
         }
         catch (Poco::Data::MySQL::ConnectionException &e)
         {
@@ -234,6 +191,50 @@ namespace database
             std::cout << "statement:" << e.what() << std::endl;
             throw;
         }
+    }
+
+    void Wall::edit_post()
+    {
+
+        try
+        {
+            Poco::Data::Session session = database::Database::get().create_session();
+            Poco::Data::Statement insert(session);
+
+            insert << "UPDATE Wall SET name = ?, login = ?, description = ?, data = ?, creation_date = ?, comments = ? WHERE id=id",
+                    use(_name),
+                    use(_login),
+                    use(_description),
+                    use(_data),
+                    use(_creation_date),
+                    use(_comments);
+
+            insert.execute();
+
+            Poco::Data::Statement select(session);
+            select << "SELECT LAST_INSERT_ID()",
+                    into(_id),
+                    range(0, 1); //  iterate over result set one row at a time
+
+            if (!select.done())
+            {
+                select.execute();
+            }
+            std::cout << "edited:" << _id << std::endl;
+
+        }
+        catch (Poco::Data::MySQL::ConnectionException &e)
+        {
+            std::cout << "connection:" << e.what() << std::endl;
+            throw;
+        }
+        catch (Poco::Data::MySQL::StatementException &e)
+        {
+
+            std::cout << "statement:" << e.what() << std::endl;
+            throw;
+        }
+
     }
 
     const std::string &Wall::get_name() const

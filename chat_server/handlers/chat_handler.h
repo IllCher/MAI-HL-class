@@ -140,6 +140,21 @@ public:
                     }
                 }
             }
+            else if (form.has("sender_id") && (request.getMethod() == Poco::Net::HTTPRequest::HTTP_GET))
+            {
+                long id = atol(form.get("sender_id").c_str());
+                auto results = database::Chat::read_by_sender(id);
+                Poco::JSON::Array arr;
+                for (auto s : results)
+                    arr.add(s.toJSON());
+                response.setStatus(Poco::Net::HTTPResponse::HTTP_OK);
+                response.setChunkedTransferEncoding(true);
+                response.setContentType("application/json");
+                std::ostream &ostr = response.send();
+                Poco::JSON::Stringifier::stringify(arr, ostr);
+
+                return;
+            }
         }
         catch (...)
         {
@@ -153,7 +168,7 @@ public:
         root->set("title", "Internal exception");
         root->set("status", Poco::Net::HTTPResponse::HTTPStatus::HTTP_NOT_FOUND);
         root->set("detail", "request ot found");
-        root->set("instance", "/chat");
+        root->set("instance", "/receiver_id");
         std::ostream &ostr = response.send();
         Poco::JSON::Stringifier::stringify(root, ostr);
     }
