@@ -144,7 +144,7 @@ public:
             else if (hasSubstr(request.getURI(), "/changepost"))
             {
                 database::Wall wall;
-                wall.id() = form.get("id");
+                //wall.id() = form.get("id");
                 wall.name() = form.get("name");
                 wall.login() = form.get("login");
                 wall.description() = form.get("description");
