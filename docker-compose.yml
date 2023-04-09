@@ -19,17 +19,17 @@ services:
     networks:
       - arch-network
     ports:
-      - 3360:3306
+      - "3306:3306"
     healthcheck:
-      test: "/usr/bin/mysql --user=stud --password=stud --execute \"SHOW DATABASES;\""
+      test: "/usr/bin/mysql --user=stud --password=helloworld --execute \"SHOW DATABASES;\""
       timeout: 20s
       retries: 5
     volumes:
       - db-node-ex01-data:/var/lib/mysql
 
-  UserService:
+  userservice:
     build:
-      context: user_service
+      context: user_server
       dockerfile: DockerUser
     container_name: userservice
     environment:
@@ -37,9 +37,9 @@ services:
       - DB_PORT=3306
       - DB_LOGIN=stud
       - DB_PASSWORD=helloworld
-      - DB_DATABASE=archdb
+      - DB_DATABASE=stud
     ports:
-      - 8080:8080
+      - "5000:5000"
     networks:
       - arch-network
     depends_on:
@@ -47,17 +47,43 @@ services:
         condition: service_healthy
 
 
-  other_server:
+  chatservice:
     build:
-      context: other_server
-      dockerfile: DockerUser
-    container_name: other_server
+      context: chat_server
+      dockerfile: DockerChat
+    container_name: chatservice
     environment:
-      - SERVICE_HOST=my_service
+      - DB_HOST=mai-db-node-ex01
+      - DB_PORT=3306
+      - DB_LOGIN=stud
+      - DB_PASSWORD=helloworld
+      - DB_DATABASE=stud
     ports:
-      - 8081:8081
+      - "5001:5001"
     networks:
       - arch-network
+    depends_on:
+      mai-db-node-ex01:
+        condition: service_healthy
+
+  wallservice:
+      build:
+        context: wall_server
+        dockerfile: DockerWall
+      container_name: wallservice
+      environment:
+        - DB_HOST=mai-db-node-ex01
+        - DB_PORT=3306
+        - DB_LOGIN=stud
+        - DB_PASSWORD=helloworld
+        - DB_DATABASE=stud
+      ports:
+        - "5002:5002"
+      networks:
+        - arch-network
+      depends_on:
+        mai-db-node-ex01:
+          condition: service_healthy
 
 volumes:
   db-node-ex01-data:
