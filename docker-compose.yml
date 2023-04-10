@@ -20,6 +20,8 @@ services:
       - arch-network
     ports:
       - "3306:3306"
+    expose:
+      - "3306"
     healthcheck:
       test: "/usr/bin/mysql --user=stud --password=helloworld --execute \"SHOW DATABASES;\""
       timeout: 20s
@@ -40,6 +42,8 @@ services:
       - DB_DATABASE=stud
     ports:
       - "5000:5000"
+    expose:
+      - "5000"
     networks:
       - arch-network
     depends_on:
@@ -60,6 +64,8 @@ services:
       - DB_DATABASE=stud
     ports:
       - "5001:5001"
+    expose:
+      - "5001"
     networks:
       - arch-network
     depends_on:
@@ -79,6 +85,8 @@ services:
         - DB_DATABASE=stud
       ports:
         - "5002:5002"
+      expose:
+        - "5002"
       networks:
         - arch-network
       depends_on:

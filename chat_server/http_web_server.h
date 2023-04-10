@@ -68,7 +68,7 @@ protected:
         if (!_helpRequested)
         {
             database::Chat::init();
-            ServerSocket svs(Poco::Net::SocketAddress("localhost", 5001));
+            ServerSocket svs(Poco::Net::SocketAddress("0.0.0.0", 5001));
             HTTPServer srv(new HTTPRequestFactory(DateTimeFormat::SORTABLE_FORMAT), svs, new HTTPServerParams);
             srv.start();
             waitForTerminationRequest();
