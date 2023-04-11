@@ -65,6 +65,15 @@ namespace database
         return root;
     }
 
+    Poco::JSON::Object::Ptr Wall::toJSONComments() const
+    {
+        Poco::JSON::Object::Ptr root = new Poco::JSON::Object();
+
+        root->set("comments", _comments);
+
+        return root;
+    }
+
     Wall Wall::fromJSON(const std::string &str)
     {
         Wall wall;
@@ -193,33 +202,25 @@ namespace database
         }
     }
 
-    void Wall::edit_post()
+    void Wall::edit_post(long id)
     {
 
         try
         {
             Poco::Data::Session session = database::Database::get().create_session();
-            Poco::Data::Statement insert(session);
+            Poco::Data::Statement update(session);
 
-            insert << "UPDATE Wall SET name = ?, login = ?, description = ?, data = ?, creation_date = ?, comments = ? WHERE id=id",
+            update << "UPDATE Wall SET name = ?, login = ?, description = ?, data = ?, creation_date = ?, comments = ? WHERE id = ?",
                     use(_name),
                     use(_login),
                     use(_description),
                     use(_data),
                     use(_creation_date),
-                    use(_comments);
+                    use(_comments),
+                    use(id);
 
-            insert.execute();
+            update.execute();
 
-            Poco::Data::Statement select(session);
-            select << "SELECT LAST_INSERT_ID()",
-                    into(_id),
-                    range(0, 1); //  iterate over result set one row at a time
-
-            if (!select.done())
-            {
-                select.execute();
-            }
             std::cout << "edited:" << _id << std::endl;
 
         }

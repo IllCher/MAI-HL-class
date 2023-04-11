@@ -144,13 +144,39 @@ public:
             else if (hasSubstr(request.getURI(), "/changepost"))
             {
                 database::Wall wall;
-                //wall.id() = form.get("id");
-                wall.name() = form.get("name");
-                wall.login() = form.get("login");
-                wall.description() = form.get("description");
-                wall.data() = form.get("data");
-                wall.creation_date() = form.get("creation_date");
-                wall.comments() = form.get("comments");
+                long id = atol(form.get("id").c_str());
+
+                std::optional<database::Wall> result = database::Wall::read_by_id(id);
+                if (form.has("name")) {
+                    wall.name() = form.get("name");
+                } else {
+                    wall.name() = result->name();
+                }
+                if (form.has("login")) {
+                    wall.login() = form.get("login");
+                } else {
+                    wall.login() = result->login();
+                }
+                if (form.has("description")) {
+                    wall.description() = form.get("description");
+                } else {
+                    wall.description() = result->description();
+                }
+                if (form.has("data")) {
+                    wall.data() = form.get("data");
+                } else {
+                    wall.data() = result->data();
+                }
+                if (form.has("creation_date")) {
+                    wall.creation_date() = form.get("creation_date");
+                } else {
+                    wall.creation_date() = result->creation_date();
+                }
+                if (form.has("comments")) {
+                    wall.comments() = form.get("comments");
+                } else {
+                    wall.comments() = result->comments();
+                }
 
                 bool check_result = true;
                 std::string message;
@@ -158,12 +184,12 @@ public:
 
                 if (check_result)
                 {
-                    wall.edit_post();
+                    wall.edit_post(id);
                     response.setStatus(Poco::Net::HTTPResponse::HTTP_OK);
                     response.setChunkedTransferEncoding(true);
                     response.setContentType("application/json");
                     std::ostream &ostr = response.send();
-                    ostr << wall.get_id();
+                    Poco::JSON::Stringifier::stringify(wall.toJSON(), ostr);
                     return;
                 }
                 else
@@ -178,11 +204,72 @@ public:
             }
             else if (hasSubstr(request.getURI(), "/checkcomments"))
             {
+                long id = atol(form.get("id").c_str());
+
+                std::optional<database::Wall> result = database::Wall::get_comments(id);
+                if (result)
+                {
+                    response.setStatus(Poco::Net::HTTPResponse::HTTP_OK);
+                    response.setChunkedTransferEncoding(true);
+                    response.setContentType("application/json");
+                    std::ostream &ostr = response.send();
+                    Poco::JSON::Stringifier::stringify(result->toJSONComments(), ostr);
+                    return;
+                }
+                else
+                {
+                    response.setStatus(Poco::Net::HTTPResponse::HTTPStatus::HTTP_NOT_FOUND);
+                    response.setChunkedTransferEncoding(true);
+                    response.setContentType("application/json");
+                    Poco::JSON::Object::Ptr root = new Poco::JSON::Object();
+                    root->set("type", "/errors/not_found");
+                    root->set("title", "Internal exception");
+                    root->set("status", "404");
+                    root->set("detail", "wall ot found");
+                    root->set("instance", "/wall");
+                    std::ostream &ostr = response.send();
+                    Poco::JSON::Stringifier::stringify(root, ostr);
+                    return;
+                }
 
 
             }
             else if (hasSubstr(request.getURI(), "/addcomment"))
             {
+                long id = atol(form.get("id").c_str());
+
+                std::optional<database::Wall> result = database::Wall::read_by_id(id);
+
+                database::Wall wall;
+                wall.name() = result->name();
+                wall.login() = result->login();
+                wall.description() = result->description();
+                wall.data() = result->data();
+                wall.creation_date() = result->creation_date();
+                wall.comments() = result->comments() + ";" + form.get("comments");
+
+                bool check_result = true;
+                std::string message;
+                std::string reason;
+
+                if (check_result)
+                {
+                    wall.edit_post(id);
+                    response.setStatus(Poco::Net::HTTPResponse::HTTP_OK);
+                    response.setChunkedTransferEncoding(true);
+                    response.setContentType("application/json");
+                    std::ostream &ostr = response.send();
+                    Poco::JSON::Stringifier::stringify(wall.toJSONComments(), ostr);
+                    return;
+                }
+                else
+                {
+                    response.setStatus(Poco::Net::HTTPResponse::HTTP_NOT_FOUND);
+                    std::ostream &ostr = response.send();
+                    ostr << message;
+                    response.send();
+                    return;
+                }
 
             }
         }

@@ -1,0 +1,99 @@
+{
+	"info": {
+		"_postman_id": "31f2d7fd-97a4-4764-b81c-4d1056ac11ad",
+		"name": "user",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24104058"
+	},
+	"item": [
+		{
+			"name": "getuser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://0.0.0.0:5000/user?id=5",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "5000",
+					"path": [
+						"user"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getuserbyfnsn",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "getuserbylogin",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "adduser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/user?first_name=dsdassadasdas&last_name=sda&email=ddas%40sfsfs&birth_date=dsdasd&login=dsdasd&password=daas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"user"
+					],
+					"query": [
+						{
+							"key": "first_name",
+							"value": "dsdassadasdas"
+						},
+						{
+							"key": "last_name",
+							"value": "sda"
+						},
+						{
+							"key": "email",
+							"value": "ddas%40sfsfs"
+						},
+						{
+							"key": "birth_date",
+							"value": "dsdasd"
+						},
+						{
+							"key": "login",
+							"value": "dsdasd"
+						},
+						{
+							"key": "password",
+							"value": "daas"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

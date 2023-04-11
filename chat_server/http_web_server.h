@@ -80,4 +80,4 @@ protected:
 private:
     bool _helpRequested;
 };
-#endif // !HTTPWEBSERVER
+#endif // HTTPWEBSERVER_H

@@ -1,0 +1,196 @@
+info:
+  title: chat
+  version: 1.0.0
+servers:
+  - url: http://localhost:5001
+paths:
+  /chat:
+    get:
+      tags:
+        - default
+      summary: getmessagebysender
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+          example: '1'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - default
+      summary: addmessage
+      requestBody:
+        content: {}
+      parameters:
+        - name: receiver_id
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: sender_id
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: message
+          in: query
+          schema:
+            type: string
+          example: tivirp
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+info:
+  title: user
+  version: 1.0.0
+servers:
+  - url: http://0.0.0.0:5000
+  - url: http://localhost:5000
+paths:
+  /user:
+    get:
+      tags:
+        - default
+      summary: getuser
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+          example: '5'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - default
+      summary: adduser
+      requestBody:
+        content: {}
+      parameters:
+        - name: first_name
+          in: query
+          schema:
+            type: string
+          example: dsdassadasdas
+        - name: last_name
+          in: query
+          schema:
+            type: string
+          example: sda
+        - name: email
+          in: query
+          schema:
+            type: string
+          example: ddas%40sfsfs
+        - name: birth_date
+          in: query
+          schema:
+            type: string
+          example: dsdasd
+        - name: login
+          in: query
+          schema:
+            type: string
+          example: dsdasd
+        - name: password
+          in: query
+          schema:
+            type: string
+          example: daas
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+
+info:
+  title: wall
+  version: 1.0.0
+servers:
+  - url: http://localhost:5002
+paths:
+  /getpost:
+    get:
+      tags:
+        - default
+      summary: getpost
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+          example: '1'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /dopost:
+    post:
+      tags:
+        - default
+      summary: addcomments
+      requestBody:
+        content: {}
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: integer
+          example: '31231'
+        - name: login
+          in: query
+          schema:
+            type: string
+          example: CoolBoy
+        - name: description
+          in: query
+          schema:
+            type: string
+          example: sdasdas
+        - name: data
+          in: query
+          schema:
+            type: string
+          example: dsdasdfdsfs
+        - name: creation_date
+          in: query
+          schema:
+            type: string
+          example: 10.03.2022
+        - name: comments
+          in: query
+          schema:
+            type: string
+          example: daas
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /checkcomments:
+    get:
+      tags:
+        - default
+      summary: getcomments
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+          example: '1'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}

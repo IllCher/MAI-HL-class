@@ -1,0 +1,195 @@
+{
+	"info": {
+		"_postman_id": "e1bd198b-80b0-4528-bc19-a146a789b814",
+		"name": "wall",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24104058"
+	},
+	"item": [
+		{
+			"name": "getpost",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5002/getpost?id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"getpost"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addpost",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5002/dopost?name=31231&login=CoolBoy&description=sdasdas&data=dsdasdfdsfs&creation_date=10.03.2022&comments=daas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"dopost"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "31231"
+						},
+						{
+							"key": "login",
+							"value": "CoolBoy"
+						},
+						{
+							"key": "description",
+							"value": "sdasdas"
+						},
+						{
+							"key": "data",
+							"value": "dsdasdfdsfs"
+						},
+						{
+							"key": "creation_date",
+							"value": "10.03.2022"
+						},
+						{
+							"key": "comments",
+							"value": "daas"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "changepost",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5002/dopost?name=31231&login=CoolBoy&description=sdasdas&data=dsdasdfdsfs&creation_date=10.03.2022&comments=daas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"dopost"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "31231"
+						},
+						{
+							"key": "login",
+							"value": "CoolBoy"
+						},
+						{
+							"key": "description",
+							"value": "sdasdas"
+						},
+						{
+							"key": "data",
+							"value": "dsdasdfdsfs"
+						},
+						{
+							"key": "creation_date",
+							"value": "10.03.2022"
+						},
+						{
+							"key": "comments",
+							"value": "daas"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addcomments",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5002/dopost?name=31231&login=CoolBoy&description=sdasdas&data=dsdasdfdsfs&creation_date=10.03.2022&comments=daas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"dopost"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "31231"
+						},
+						{
+							"key": "login",
+							"value": "CoolBoy"
+						},
+						{
+							"key": "description",
+							"value": "sdasdas"
+						},
+						{
+							"key": "data",
+							"value": "dsdasdfdsfs"
+						},
+						{
+							"key": "creation_date",
+							"value": "10.03.2022"
+						},
+						{
+							"key": "comments",
+							"value": "daas"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getcomments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5002/checkcomments?id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"checkcomments"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

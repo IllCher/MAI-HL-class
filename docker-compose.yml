@@ -19,9 +19,9 @@ services:
     networks:
       - arch-network
     ports:
-      - "3306:3306"
+      - "3336:3306"
     expose:
-      - "3306"
+      - "3336"
     healthcheck:
       test: "/usr/bin/mysql --user=stud --password=helloworld --execute \"SHOW DATABASES;\""
       timeout: 20s

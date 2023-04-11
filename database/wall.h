@@ -41,13 +41,14 @@ namespace database
         static void init();
         static std::optional<Wall> read_by_id(long id);
         void save_to_mysql();
-        void edit_post();
+        void edit_post(long id);
         void add_comments(std::string comment);
         static std::optional<Wall> get_comments(long id);
 
 
         Poco::JSON::Object::Ptr toJSON() const;
 
+        Poco::JSON::Object::Ptr toJSONComments() const;
     };
 }
 
