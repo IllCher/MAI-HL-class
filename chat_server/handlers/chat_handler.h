@@ -100,7 +100,7 @@ public:
                     root->set("type", "/errors/not_found");
                     root->set("title", "Internal exception");
                     root->set("status", "404");
-                    root->set("detail", "chat ot found");
+                    root->set("detail", "chat not found");
                     root->set("instance", "/chat");
                     std::ostream &ostr = response.send();
                     Poco::JSON::Stringifier::stringify(root, ostr);
@@ -167,7 +167,7 @@ public:
         root->set("type", "/errors/not_found");
         root->set("title", "Internal exception");
         root->set("status", Poco::Net::HTTPResponse::HTTPStatus::HTTP_NOT_FOUND);
-        root->set("detail", "request ot found");
+        root->set("detail", "request not found");
         root->set("instance", "/receiver_id");
         std::ostream &ostr = response.send();
         Poco::JSON::Stringifier::stringify(root, ostr);
