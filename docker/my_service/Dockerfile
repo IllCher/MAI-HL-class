@@ -7,4 +7,4 @@ RUN git clone https://github.com/IllCher/MAI-HL-class
 RUN sudo ldconfig
 RUN cd MAI-HL-class && sudo chmod +x addvars.sh && ./addvars.sh && mkdir build && cd build && cmake  .. && make
 ENTRYPOINT [ "MAI-HL-class/build/service" ]
-EXPOSE 5000
+EXPOSE 8081

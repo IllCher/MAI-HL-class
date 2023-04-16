@@ -45,13 +45,13 @@ create table IF NOT EXISTS Wall
     comments      longtext collate utf8_unicode_ci      null
 );
 
-INSERT INTO stud.Chat (receiver_id, sender_id, message)
+INSERT INTO archdb.Chat (receiver_id, sender_id, message)
 VALUES (1, 2, 'dada');
 
-INSERT INTO stud.User (first_name, last_name, email, birth_date, login, password)
+INSERT INTO archdb.User (first_name, last_name, email, birth_date, login, password)
 VALUES ('Ilya', 'Chernenko', 'chern@gmail.com', '01.02.00', 'coolgut', 'secret');
 
-INSERT INTO stud.Wall (name, login, description, data, creation_date, comments)
+INSERT INTO archdb.Wall (name, login, description, data, creation_date, comments)
 VALUES ('random', 'coolgut', 'coolimage', 'imagineimage', '11.03.2023', 'sad;');
 
 
