@@ -38,6 +38,7 @@ namespace database
                             << "PRIMARY KEY (`id`),KEY `fn` (`first_name`),KEY `ln` (`last_name`));"
                             << hint,
                         now;
+                std::cout << create_stmt.toString() << std::endl;
             }
         }
 
