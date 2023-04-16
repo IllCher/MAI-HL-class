@@ -1,6 +1,4 @@
-CREATE DATABASE IF NOT EXISTS stud;
-use stud;
-show tables;
+CREATE DATABASE IF NOT EXISTS archdb;
 
 create table IF NOT EXISTS Chat
 (
