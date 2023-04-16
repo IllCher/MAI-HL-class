@@ -41,7 +41,7 @@ using Poco::Util::ServerApplication;
 #include "handlers/user_handler.h"
 #include "handlers/wall_handler.h"
 
-static bool startsWith(const std::string &str, const std::string &prefix)
+[[maybe_unused]] static bool startsWith(const std::string &str, const std::string &prefix)
 {
     return str.size() >= prefix.size() && 0 == str.compare(0, prefix.size(), prefix);
 }
