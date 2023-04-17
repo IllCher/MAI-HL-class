@@ -74,7 +74,7 @@ protected:
             database::User::init();
             database::Wall::init();
 
-            ServerSocket svs(Poco::Net::SocketAddress("0.0.0.0", 8082));
+            ServerSocket svs(Poco::Net::SocketAddress("0.0.0.0", 8080));
             HTTPServer srv(new HTTPRequestFactory(DateTimeFormat::SORTABLE_FORMAT), svs, new HTTPServerParams);
             srv.start();
             waitForTerminationRequest();
