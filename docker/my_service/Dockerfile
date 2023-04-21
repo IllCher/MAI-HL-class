@@ -5,6 +5,6 @@ RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata git sudo
 RUN git clone -b master https://github.com/pocoproject/poco.git && cd poco && mkdir cmake-build && cd cmake-build && cmake .. && make && sudo make install && cd .. && cd ..
 RUN git clone https://github.com/IllCher/MAI-HL-class
 RUN sudo ldconfig
-RUN cd MAI-HL-class && sudo chmod +x addvars.sh && ./addvars.sh && mkdir build && cd build && cmake  .. && make
+RUN cd MAI-HL-class && sudo chmod +x addvars.sh && mkdir build && cd build && cmake  .. && make && ./build/addvars.sh
 ENTRYPOINT [ "MAI-HL-class/build/service" ]
 EXPOSE 8080
