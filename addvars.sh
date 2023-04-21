@@ -3,3 +3,5 @@ export DB_PORT=6033
 export DB_LOGIN=stud
 export DB_PASSWORD=stud
 export DB_DATABASE=archdb
+
+./build/service
