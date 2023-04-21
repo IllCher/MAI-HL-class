@@ -196,8 +196,8 @@ namespace database
             std::vector<std::string> hints = database::Database::get_all_hints();
 
             std::vector<std::future<std::vector<User>>> futures;
-            first_name + "%";
-            last_name + "%";
+            first_name += "%";
+            last_name += "%";
             // map phase in parallel
             for (const std::string &hint : hints)
             {
