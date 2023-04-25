@@ -26,10 +26,12 @@ SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(${service} main.cpp
         config/config.cpp
         database/database.cpp
+        database/cache.cpp
         database/user.cpp
         database/wall.cpp
         database/chat.cpp)
 
+add_executable(load_data load_data.cpp)
 
 target_include_directories(${service} PRIVATE "${CMAKE_BINARY_DIR}")
 target_compile_options(${service} PRIVATE -Wall -Wextra -pedantic -Werror )
@@ -37,6 +39,19 @@ set_target_properties(${service} PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(${service} PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
 
 target_link_libraries(${service} PRIVATE
+        ${CMAKE_THREAD_LIBS_INIT}
+        ${Poco_LIBRARIES}
+        "PocoData"
+        "PocoDataMySQL"
+        "mysqlclient"
+        ZLIB::ZLIB)
+
+target_include_directories(load_data PRIVATE "${CMAKE_BINARY_DIR}")
+target_compile_options(load_data PRIVATE -Wall -Wextra -pedantic -Werror )
+set_target_properties(load_data PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(load_data PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+
+target_link_libraries(load_data PRIVATE
         ${CMAKE_THREAD_LIBS_INIT}
         ${Poco_LIBRARIES}
         "PocoData"
