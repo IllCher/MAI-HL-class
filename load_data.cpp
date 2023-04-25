@@ -43,9 +43,7 @@ auto main() -> int
 
 
 
-    Poco::Data::Session session(
-            Poco::Data::SessionFactory::instance().create(
-                    Poco::Data::MySQL::Connector::KEY, _connection_string));
+    Poco::Data::Session session(Poco::Data::SessionFactory::instance().create(Poco::Data::MySQL::Connector::KEY, _connection_string));
     std::cout << "session created" << std::endl;
     try
     {
@@ -104,7 +102,7 @@ auto main() -> int
             std::string sharding_hint = "-- sharding:";
             sharding_hint += std::to_string(shard_number);
 
-            std::string select_str = "INSERT INTO User (id, first_name,last_name,email, birth_date, login,password) VALUES(?, ?, ?, ?, ?, ?, ?) ";
+            std::string select_str = "INSERT INTO User (id, first_name, last_name, email, birth_date, login, password) VALUES(?, ?, ?, ?, ?, ?, ?) ";
             select_str += sharding_hint;
             std::cout << select_str << std::endl;
 
