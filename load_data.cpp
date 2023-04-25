@@ -71,7 +71,7 @@ auto main() -> int
 
         // https://www.onlinedatagenerator.com/
         std::string json;
-        std::ifstream is("ExportJson.json");
+        std::ifstream is("gendata.json");
         std::istream_iterator<char> eos;
         std::istream_iterator<char> iit(is);
         while (iit != eos)
