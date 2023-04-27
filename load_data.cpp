@@ -21,15 +21,15 @@ auto main() -> int
 
     std::string _connection_string;
     _connection_string+="host=";
-    _connection_string+=std::getenv("DB_HOST");
+    _connection_string+=std::getenv("127.0.0.1");
     _connection_string+=";port=";
-    _connection_string+=std::getenv("DB_PORT");
+    _connection_string+=std::getenv("6033");
     _connection_string+=";user=";
-    _connection_string+=std::getenv("DB_LOGIN");
+    _connection_string+=std::getenv("stud");
     _connection_string+=";db=";
-    _connection_string+=std::getenv("DB_DATABASE");
+    _connection_string+=std::getenv("stud");
     _connection_string+=";password=";
-    _connection_string+=std::getenv("DB_PASSWORD");
+    _connection_string+=std::getenv("archdb");
     std::cout << "connection string:" << _connection_string << std::endl;
 
     //get_all_hints
