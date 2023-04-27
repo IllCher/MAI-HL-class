@@ -21,15 +21,15 @@ auto main() -> int
 
     std::string _connection_string;
     _connection_string+="host=";
-    _connection_string+=std::getenv("127.0.0.1");
+    _connection_string+="127.0.0.1";
     _connection_string+=";port=";
-    _connection_string+=std::getenv("6033");
+    _connection_string+="6033";
     _connection_string+=";user=";
-    _connection_string+=std::getenv("stud");
+    _connection_string+="stud";
     _connection_string+=";db=";
-    _connection_string+=std::getenv("stud");
+    _connection_string+="archdb";
     _connection_string+=";password=";
-    _connection_string+=std::getenv("archdb");
+    _connection_string+="stud";
     std::cout << "connection string:" << _connection_string << std::endl;
 
     //get_all_hints
@@ -102,7 +102,7 @@ auto main() -> int
             std::string sharding_hint = "-- sharding:";
             sharding_hint += std::to_string(shard_number);
 
-            std::string select_str = "INSERT INTO User (id, first_name, last_name, email, birth_date, login, password) VALUES(?, ?, ?, ?, ?, ?, ?) ";
+            std::string select_str = "INSERT INTO User (id, first_name,last_name,email, birth_date, login,password) VALUES(?, ?, ?, ?, ?, ?, ?) ";
             select_str += sharding_hint;
             std::cout << select_str << std::endl;
 
