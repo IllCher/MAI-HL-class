@@ -6,6 +6,6 @@ RUN git clone -b master https://github.com/pocoproject/poco.git && cd poco && mk
 RUN git clone https://github.com/tdv/redis-cpp.git && cd redis-cpp && mkdir build && cd build && cmake .. && make && sudo make install && cd .. && cd ..
 RUN git clone https://github.com/edenhill/librdkafka.git && cd librdkafka && ./configure && make && sudo make install && cd
 RUN git clone https://github.com/mfontanini/cppkafka && cd cppkafka && mkdir build && cd build && cmake .. && make && sudo make install && cd
-RUN git clone https://github.com/IllCher/MAI-HL-class && sudo ldconfig && cd MAI-HL-class && mkdir build && cp gendata.json build/ && cd build && cmake  .. && make && cd ..
+RUN git clone https://github.com/IllCher/MAI-HL-class && sudo ldconfig && cd MAI-HL-class && mkdir build && cp gendata.json build/ && cd build && cmake  .. && make && cd .. && chmod +x start.sh && ./start.sh
 ENTRYPOINT [ "MAI-HL-class/build/service" ]
 EXPOSE 8082

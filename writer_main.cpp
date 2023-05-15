@@ -13,8 +13,8 @@ int main()
     try
     {
         // Stop processing on SIGINT
-        signal(SIGINT, [](int)
-        { running = false; });
+        //signal(SIGINT, [](int)
+        //{ running = false; });
 
         // Construct the configuration
         cppkafka::Configuration config = {
