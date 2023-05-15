@@ -7,7 +7,9 @@ Config::Config()
     _login = std::getenv("DB_LOGIN");
     _password = std::getenv("DB_PASSWORD");
     _database = std::getenv("DB_DATABASE");
-    _cache_servers = std::getenv("CACHE");
+    _queue_host = std::getenv("QUEUE_HOST");
+    _queue_topic = std::getenv("QUEUE_TOPIC");
+    _queue_group_id  = std::getenv("QUEUE_GROUP_ID");
 }
 
 Config &Config::get()

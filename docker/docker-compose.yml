@@ -198,8 +198,8 @@ services:
         dockerfile: Dockerfile
       container_name: my_writer
       environment:
-        - DB_HOST=db-node-1
-        - DB_PORT=3306
+        - DB_HOST=proxysql
+        - DB_PORT=6033
         - DB_LOGIN=stud
         - DB_PASSWORD=stud
         - DB_DATABASE=archdb

@@ -10,8 +10,6 @@ bool running = true;
 
 int main()
 {
-    try
-    {
         // Stop processing on SIGINT
         //signal(SIGINT, [](int)
         //{ running = false; });
@@ -40,26 +38,19 @@ int main()
         std::cout << "Consuming messages from topic " << Config::get().get_queue_topic() << std::endl;
 
         // Now read lines and write them into kafka
-        while (running)
-        {
+        while (running) {
             // Try to consume a message
             cppkafka::Message msg = consumer.poll();
-            if (msg)
-            {
+            if (msg) {
                 // If we managed to get a message
-                if (msg.get_error())
-                {
+                if (msg.get_error()) {
                     // Ignore EOF notifications from rdkafka
-                    if (!msg.is_eof())
-                    {
+                    if (!msg.is_eof()) {
                         std::cout << "[+] Received error notification: " << msg.get_error() << std::endl;
                     }
-                }
-                else
-                {
+                } else {
                     // Print the key (if any)
-                    if (msg.get_key())
-                    {
+                    if (msg.get_key()) {
                         std::cout << msg.get_key() << " -> ";
                     }
                     // Print the payload
@@ -73,11 +64,5 @@ int main()
                 }
             }
         }
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << e.what() << std::endl;
-    }
-
-    return 1;
+    return 0;
 }
