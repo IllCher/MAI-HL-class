@@ -19,7 +19,7 @@ services:
     networks:
       - arch-network
     ports:
-      - 6033:3306
+      - 3360:3306
     volumes:
       - db-node-1-data:/var/lib/mysql
 
@@ -170,7 +170,7 @@ services:
     container_name: my_service
     environment:
       - DB_HOST=proxysql
-      - DB_PORT=3306
+      - DB_PORT=6033
       - DB_LOGIN=stud
       - DB_PASSWORD=stud
       - DB_DATABASE=archdb
