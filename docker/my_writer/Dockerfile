@@ -7,4 +7,4 @@ RUN git clone https://github.com/tdv/redis-cpp.git && cd redis-cpp && mkdir buil
 RUN git clone https://github.com/edenhill/librdkafka.git && cd librdkafka && ./configure && make && sudo make install && cd
 RUN git clone https://github.com/mfontanini/cppkafka && cd cppkafka && mkdir build && cd build && cmake .. && make && sudo make install && cd
 RUN git clone https://github.com/IllCher/MAI-HL-class && sudo ldconfig && cd MAI-HL-class && mkdir build && cd build && cmake  .. && make && cd ..
-ENTRYPOINT [ "MAI-HL-class/build/writer"]
+ENTRYPOINT [ "MAI-HL-class/build/writer" ]

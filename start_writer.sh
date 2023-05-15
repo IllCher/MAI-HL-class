@@ -4,5 +4,5 @@ export DB_LOGIN=stud
 export DB_PASSWORD=stud
 export DB_DATABASE=archdb
 export QUEUE_HOST=127.0.0.1:9092
-export QUEUE_TOPIC=event_server
+export QUEUE_TOPIC=service
 export QUEUE_GROUP_ID=0
