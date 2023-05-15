@@ -50,6 +50,7 @@ namespace database
             static long db_size();
 
             void save_to_cache();
+            void send_to_queue();
             static std::optional<User> read_from_cache_by_id(long id);
     };
 }

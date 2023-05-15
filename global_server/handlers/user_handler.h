@@ -245,6 +245,11 @@ public:
             }
             else if (request.getMethod() == Poco::Net::HTTPRequest::HTTP_POST)
             {
+                response.setStatus(Poco::Net::HTTPResponse::HTTP_OK);
+                response.setChunkedTransferEncoding(true);
+                response.setContentType("application/json");
+                std::ostream &ostr = response.send();
+
                 if (form.has("first_name") && form.has("last_name") && form.has("email") && form.has("birth_date") && form.has("login") && form.has("password"))
                 {
                     database::User user;
@@ -280,6 +285,31 @@ public:
                         message += "<br>";
                     }
 
+
+
+                    if (check_result)
+                    {
+
+                        try
+                        {
+                            static int i=0;
+                            user.send_to_queue();
+                            std::cout << "send to queue: " << std::to_string(++i)  << std::endl;
+                            ostr << "{ \"result\": true }";
+                            return;
+                        }
+                        catch (...)
+                        {
+                            ostr << "{ \"result\": false , \"reason\": \" database error\" }";
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        ostr << "{ \"result\": false , \"reason\": \"" << message << "\" }";
+                        return;
+                    }
+                    /*
                     if (check_result)
                     {
                         user.save_to_mysql();
@@ -297,7 +327,7 @@ public:
                         ostr << message;
                         response.send();
                         return;
-                    }
+                    }*/
                 }
             }
         }
